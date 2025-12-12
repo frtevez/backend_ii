@@ -37,11 +37,14 @@ export const loginUser = async (req, res) => {
             return res.status(401).json({ error: 'Password is incorrect or user does not exist' });
         };
         const token = generateToken(user);
-        res.cookie("token", token, {
+
+        res.cookie('currentUser', token, {
+            signed: true,
             httpOnly: true,
-            maxAge: 3600000,
-        })
-        res.status(200).json({ message: 'Logged in successfully' });
+            maxAge: 3600000
+        });
+
+        res.redirect('/current');
     } catch (error) {
         res.status(500).json({ error: error.message });
     };
