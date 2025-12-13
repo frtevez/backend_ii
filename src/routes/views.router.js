@@ -9,7 +9,7 @@ viewsRouter.get('/', (req, res) => {
 });
 
 viewsRouter.get('/login', (req, res) => {
-    res.status(200).json({ message: 'login page' });
+    res.status(200).json({ message: 'login page', error: req.query.error });
 });
 
 viewsRouter.get('/register', (req, res) => {
