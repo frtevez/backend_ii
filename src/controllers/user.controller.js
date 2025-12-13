@@ -18,8 +18,8 @@ export const registerUser = async (req, res) => {
         const userExists = await User.findOne({ email });
         if (userExists) return res.status(400).json({ error: 'User already exists' })
         const newUser = new User({ first_name, last_name, email, age, password: hashedPassword, cart: new Types.ObjectId(), role });
-        newUser.save();
-        const token = generateToken(newUser);
+        await newUser.save();
+        const token = generateToken(newUser.toObject());
 
         res.cookie('currentUser', token, {
             signed: true,
