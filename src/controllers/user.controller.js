@@ -19,7 +19,14 @@ export const registerUser = async (req, res) => {
         if (userExists) return res.status(400).json({ error: 'User already exists' })
         const newUser = new User({ first_name, last_name, email, age, password: hashedPassword, cart: new Types.ObjectId(), role });
         newUser.save();
-        res.status(201).json({ message: 'Registered successfully' });
+        const token = generateToken(newUser);
+
+        res.cookie('currentUser', token, {
+            signed: true,
+            httpOnly: true,
+            maxAge: 3600000
+        });
+        res.redirect('/api/sessions/current');
     } catch (error) {
         res.status(500).json({ error: error.message });
     };
@@ -43,8 +50,7 @@ export const loginUser = async (req, res) => {
             httpOnly: true,
             maxAge: 3600000
         });
-
-        res.redirect('/current');
+        res.redirect('/api/sessions/current');
     } catch (error) {
         res.status(500).json({ error: error.message });
     };

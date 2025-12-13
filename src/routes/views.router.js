@@ -16,7 +16,7 @@ viewsRouter.get('/register', (req, res) => {
     res.status(200).json({ message: 'register page' })
 });
 
-viewsRouter.get('/current', requireAuth, async (req, res) => {
+viewsRouter.get('/api/sessions/current', requireAuth, async (req, res) => {
     const user = await User.findById(req.user._id).lean()
     res.json({'current': { ...user }})
 });
