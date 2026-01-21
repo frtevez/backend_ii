@@ -1,9 +1,9 @@
 import express from 'express';
-import userRouter from './src/routes/user.router.js';
-import connectMongoDB from './src/config/db.js';
+import userRouter from './routes/user.router.js';
+import connectMongoDB from './config/db.js';
 import cookieParser from 'cookie-parser';
-import viewsRouter from './src/routes/views.router.js';
-import initializePassport from './src/config/passport.config.js';
+import viewsRouter from './routes/views.router.js';
+import initializePassport from './config/passport.config.js';
 import passport from 'passport';
 import { configDotenv } from 'dotenv';
 
