@@ -1,11 +1,12 @@
 import express from 'express';
 import userRouter from './routes/user.router.js';
-import connectMongoDB from './config/db.js';
+import connectDB from './config/db.js';
 import cookieParser from 'cookie-parser';
 import viewsRouter from './routes/views.router.js';
 import initializePassport from './config/passport.config.js';
 import passport from 'passport';
 import { configDotenv } from 'dotenv';
+import sessionsRouter from './routes/sessions.router.js';
 
 configDotenv();
 const app = express();
@@ -22,8 +23,9 @@ app.use(passport.initialize());
 
 app.use('/', viewsRouter);
 app.use('/api/users', userRouter);
+app.use('/api/sessions', sessionsRouter);
 
-connectMongoDB().then(() => {
+connectDB().then(() => {
     app.listen(PORT, () => {
         console.log(`Listening on http://localhost:${PORT}`);
     });

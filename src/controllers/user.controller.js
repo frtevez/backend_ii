@@ -1,57 +1,56 @@
-import User from '../models/user.model.js';
-import { hashSync, compareSync, genSaltSync } from 'bcrypt';
-import { generateToken } from '../utils/jwt.js';
-import { Types } from 'mongoose';
+import UserDto from "../dto/user.dto.js";
+import { userRepository } from "../repositories/user.repository.js";
+import { generateToken } from "../utils/jwt.js";
+import { setAuthCookie } from "../utils/session.js";
 
-const createHash = password => hashSync(password, genSaltSync(10));
-const isValidPassword = (user, password) => compareSync(password, user.password);
+class UserController {
+  constructor(repository) {
+    this.repository = repository;
+  }
 
-export const registerUser = async (req, res) => {
-    const { first_name, last_name, email, age, password, role } = req.body;
+  _setCookieAndRespond = (res, user) => {
+    const token = generateToken(user)
+    setAuthCookie(res, token)
+    res.json(new UserDto(user));
+  }
 
-    if (!first_name || !last_name || !email || !age || !password || !role) {
-        return res.status(400).json({ error: 'Required fields are empty' });
-    };
-    const hashedPassword = createHash(password);
-
+  current = async (req, res, next) => {
     try {
-        const userExists = await User.findOne({ email });
-        if (userExists) return res.status(400).json({ error: 'User already exists' })
-        const newUser = new User({ first_name, last_name, email, age, password: hashedPassword, cart: new Types.ObjectId(), role });
-        await newUser.save();
-        const token = generateToken(newUser.toObject());
-
-        res.cookie('currentUser', token, {
-            signed: true,
-            httpOnly: true,
-            maxAge: 3600000
-        });
-        res.redirect('/api/sessions/current');
+      const currentUser = await new UserDto(req.user)
+      res.json({ currentUser })
     } catch (error) {
-        res.status(500).json({ error: error.message });
-    };
-};
+      next(error)
+    }
+  }
 
-export const loginUser = async (req, res) => {
-    const { email, password } = req.body;
-    if (!email || !password) {
-        return res.status(400).json({ error: 'Required fields are empty' });
-    };
-
+  register = async (req, res, next) => {
     try {
-        const user = await User.findOne({ email }).lean();
-        if (!user || !isValidPassword(user, password)) {
-            return res.status(401).json({ error: 'Password is incorrect or user does not exist' });
-        };
-        const token = generateToken(user);
-
-        res.cookie('currentUser', token, {
-            signed: true,
-            httpOnly: true,
-            maxAge: 3600000
-        });
-        res.redirect('/api/sessions/current');
+      const user = await this.repository.register(req.body);
+      this._setCookieAndRespond(res, user)
     } catch (error) {
-        res.status(500).json({ error: error.message });
-    };
-};
+      next(error);
+    }
+  };
+
+  login = async (req, res, next) => {
+    try {
+      const { email, password } = req.body;
+      const user = await this.repository.login(email, password);
+      this._setCookieAndRespond(res, user)
+
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  listAll = async (req, res, next) => {
+    try {
+      const user = await this.repository.listAll();
+      res.json({ users: user.map(u => new UserDto(u)) });
+    } catch (error) {
+      next(error);
+    }
+  };
+}
+
+export const userController = new UserController(userRepository);
