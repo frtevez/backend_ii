@@ -1,5 +1,4 @@
 import { hashSync, compareSync, genSaltSync } from 'bcrypt';
-import { generateToken } from '../utils/jwt.js';
 import { Types } from 'mongoose';
 import { userDao } from '../dao/mongo/user.dao.js';
 import CustomError from '../utils/customError.js';
