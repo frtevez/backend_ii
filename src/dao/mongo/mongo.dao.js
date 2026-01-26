@@ -31,7 +31,7 @@ class MongoDAO {
             throw new Error(error);
         }
     };
-    updateById = async (id) => {
+    updateById = async (id, data) => {
         try {
             return await this.model.findByIdAndUpdate(id, data, { new: true })
         } catch (error) {

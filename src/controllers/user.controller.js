@@ -16,7 +16,7 @@ class UserController {
 
   current = async (req, res, next) => {
     try {
-      const currentUser = await new UserDto(req.user)
+      const currentUser = new UserDto(req.user)
       res.json({ currentUser })
     } catch (error) {
       next(error)
@@ -45,8 +45,8 @@ class UserController {
 
   listAll = async (req, res, next) => {
     try {
-      const user = await this.repository.listAll();
-      res.json({ users: user.map(u => new UserDto(u)) });
+      const users = await this.repository.listAll();
+      res.json({ users: users.map(u => new UserDto(u)) });
     } catch (error) {
       next(error);
     }

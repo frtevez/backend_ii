@@ -1,3 +1,5 @@
+// NO FUNCIONAL
+
 import Router from "express";
 
 const viewsRouter = Router();

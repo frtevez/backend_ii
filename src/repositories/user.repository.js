@@ -13,7 +13,7 @@ class UserRepository {
 
     listAll = async () => {
         try {
-            return await userDao.getAll()
+            return await this.dao.getAll()
         } catch (error) {
             throw new Error(error)
         }

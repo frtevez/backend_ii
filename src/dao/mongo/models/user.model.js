@@ -27,11 +27,13 @@ const UserSchema = new Schema({
     cart: {
         type: Schema.Types.ObjectId,
         ref: "Carts",
-        unique: true
+        unique: true,
+        required: true
     },
     role: {
         type: String,
-        default: 'user'
+        required: true,
+        default: 'customer'
     }
 }, { timestamps: true });
 
