@@ -1,5 +1,4 @@
 import { productDao } from '../dao/mongo/product.dao.js';
-import CustomError from '../utils/customError.js';
 
 class ProductRepository {
     constructor(dao) {
