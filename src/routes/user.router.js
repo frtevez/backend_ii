@@ -1,6 +1,7 @@
 import Router from 'express';
 
 import { userController } from '../controllers/user.controller.js';
+import { handlePolicies } from '../middlewares/handlePolicies.js';
 
 const userRouter = Router();
 
@@ -8,6 +9,8 @@ userRouter.post('/register', userController.register);
 
 userRouter.post('/login', userController.login);
 
-userRouter.get('/list', userController.listAll);
+userRouter.get('/list', handlePolicies(["ADMIN"]), userController.listAll);
+
+
 
 export default userRouter;

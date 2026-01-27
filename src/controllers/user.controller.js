@@ -8,10 +8,9 @@ class UserController {
     this.repository = repository;
   }
 
-  _setCookieAndRespond = (res, user) => {
-    const token = generateToken(user)
+  _setCookie = (res, data) => {
+    const token = generateToken(data)
     setAuthCookie(res, token)
-    res.json(new UserDto(user));
   }
 
   current = async (req, res, next) => {
@@ -26,7 +25,8 @@ class UserController {
   register = async (req, res, next) => {
     try {
       const user = await this.repository.register(req.body);
-      this._setCookieAndRespond(res, user)
+      this._setCookie(res, user)
+      res.json(new UserDto(user));
     } catch (error) {
       next(error);
     }
@@ -36,8 +36,8 @@ class UserController {
     try {
       const { email, password } = req.body;
       const user = await this.repository.login(email, password);
-      this._setCookieAndRespond(res, user)
-
+      this._setCookie(res, user)
+      res.json(new UserDto(user));
     } catch (error) {
       next(error);
     }
@@ -51,6 +51,21 @@ class UserController {
       next(error);
     }
   };
+
+  resetCart = async (req, res, next) => {
+    try {
+      const userId = req.user._id
+      
+      const cart = await this.repository.resetCart(userId)
+      const user = await this.repository.getUser(userId)
+      
+      this._setCookie(res, user.toObject())
+
+      res.json({ cart })
+    } catch (error) {
+      next(error)
+    }
+  }
 }
 
 export const userController = new UserController(userRepository);

@@ -1,5 +1,5 @@
 
-import { Schema, Model } from "mongoose"
+import { Schema, model } from "mongoose"
 
 const TicketSchema = new Schema({
     code: {
@@ -24,5 +24,5 @@ const TicketSchema = new Schema({
     }
 }, { timestamps: true })
 
-const TicketModel = Model("ticket", TicketSchema)
+const TicketModel = model("ticket", TicketSchema)
 export default TicketModel;

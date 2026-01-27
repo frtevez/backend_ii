@@ -1,4 +1,4 @@
-import {Schema, Model} from "mongoose";
+import {Schema, model} from "mongoose";
 
 const cartSchema = new Schema({
     products: {
@@ -6,8 +6,7 @@ const cartSchema = new Schema({
             {
                 product: {
                     type: Schema.Types.ObjectId,
-                    ref: "product",
-                    unique: true
+                    ref: "product"
                 },
                 quantity: {
                     type: Number,
@@ -22,6 +21,6 @@ const cartSchema = new Schema({
     timestamps: true
 });
 
-const CartModel = Model("cart", cartSchema);
+const CartModel = model("cart", cartSchema);
 
 export default CartModel;
