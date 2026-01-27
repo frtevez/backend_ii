@@ -10,5 +10,7 @@ const cartRouter = Router();
 cartRouter.get("/", passportCall('jwt'), handlePolicies(["CUSTOMER"]), cartController.get)
 cartRouter.post('/', passportCall('jwt'), handlePolicies(["CUSTOMER"]), cartController.addProductToCurrentUserCart);
 cartRouter.put('/reset', passportCall('jwt'), handlePolicies(["CUSTOMER"]), userController.resetCart);
+cartRouter.post("/:cid/purchase", handlePolicies(["CUSTOMER"]), cartController.purchase)
+cartRouter.post("/purchase", passportCall('jwt'), handlePolicies(["CUSTOMER"]), cartController.purchase)
 
 export default cartRouter;

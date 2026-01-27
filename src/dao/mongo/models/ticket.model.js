@@ -21,6 +21,10 @@ const TicketSchema = new Schema({
     purchaserId: {
         type: Schema.Types.ObjectId,
         ref: "user"
+    },
+    purchase_datetime: {
+        type: Date,
+        default: Date.now
     }
 }, { timestamps: true })
 
